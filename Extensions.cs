@@ -6,14 +6,19 @@ public static class Extensions
 {
     public static List<int> AllIndexesOf(this string str, string value)
     {
-        if (String.IsNullOrEmpty(value))
-            throw new ArgumentException("the string to find may not be empty", "value");
-        List<int> indexes = new List<int>();
+        if (string.IsNullOrEmpty(value))
+        {
+            throw new ArgumentException("the string to find may not be empty", nameof(value));
+        }
+
+        List<int> indexes = new();
         for (int index = 0; ; index += value.Length)
         {
             index = str.IndexOf(value, index);
             if (index == -1)
+            {
                 return indexes;
+            }
             indexes.Add(index);
         }
     }
@@ -25,7 +30,7 @@ public static class Extensions
             yield break;
         }
 
-        var list = sequence.ToList();
+        List<T> list = sequence.ToList();
 
         if (!list.Any())
         {
@@ -33,7 +38,7 @@ public static class Extensions
         }
         else
         {
-            var startingElementIndex = 0;
+            int startingElementIndex = 0;
 
             foreach (var startingElement in list)
             {
@@ -55,7 +60,7 @@ public static class Extensions
     private static IEnumerable<int[]> Combinations(int m, int n)
     {
         int[] result = new int[m];
-        Stack<int> stack = new Stack<int>(m);
+        Stack<int> stack = new(m);
         stack.Push(0);
         while (stack.Count > 0)
         {
@@ -65,7 +70,12 @@ public static class Extensions
             {
                 result[index++] = value++;
                 stack.Push(value);
-                if (index != m) continue;
+                
+                if (index != m)
+                {
+                    continue;
+                }
+
                 yield return (int[])result.Clone(); // thanks to @xanatos
                                                     //yield return result;
                 break;
@@ -76,9 +86,15 @@ public static class Extensions
     public static IEnumerable<T[]> Combinations<T>(T[] array, int m)
     {
         if (array.Length < m)
+        {
             throw new ArgumentException("Array length can't be less than number of selected elements");
+        }
+
         if (m < 1)
+        {
             throw new ArgumentException("Number of selected elements can't be less than 1");
+        }
+
         T[] result = new T[m];
         foreach (int[] j in Combinations(m, array.Length))
         {
@@ -93,12 +109,12 @@ public static class Extensions
     {
         try
         {
-            int FirstDim = source.Length;
-            int SecondDim = source.GroupBy(row => row.Length).Single().Key; // throws InvalidOperationException if source is not rectangular
+            int firstDim = source.Length;
+            int secondDim = source.GroupBy(row => row.Length).Single().Key; // throws InvalidOperationException if source is not rectangular
 
-            var result = new T[FirstDim, SecondDim];
-            for (int i = 0; i < FirstDim; ++i)
-                for (int j = 0; j < SecondDim; ++j)
+            var result = new T[firstDim, secondDim];
+            for (int i = 0; i < firstDim; ++i)
+                for (int j = 0; j < secondDim; ++j)
                     result[i, j] = source[i][j];
 
             return result;
@@ -113,22 +129,22 @@ public static class Extensions
     {
         if (input == null)
         {
-            throw new ArgumentNullException("input");
+            throw new ArgumentNullException(nameof(input));
         }
-        StringBuilder builder = new StringBuilder(input);
+        StringBuilder builder = new(input);
         builder[index] = newChar;
         return builder.ToString();
     }
 
     public static IEnumerable<string> Lines(this string input)
     {
-        foreach (var line in input.Split(Environment.NewLine).Where(l => !String.IsNullOrEmpty(l.Trim())))
+        foreach (var line in input.Split(Environment.NewLine).Where(l => !string.IsNullOrEmpty(l.Trim())))
         {
             yield return line;
         }
     }
 
-    public static IEnumerable<string> Words(this string line) 
+    public static IEnumerable<string> Words(this string line)
     {
         foreach (var word in line.Split(" "))
         {

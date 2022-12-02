@@ -8,7 +8,6 @@ public class Day1 : BaseDay
             .Select(e => e.Sum())
             .Max()
             .ToString();
-    
 
     public override string PartTwo(string input) =>
         input.Split("\n\n")
