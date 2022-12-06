@@ -2,7 +2,7 @@ namespace AoC2022.Days;
 
 public class Day6 : BaseDay
 {
-    private int GetIndexOfMarker(string s, int length)
+    private static int GetIndexOfMarker(string s, int length)
     {
         int i = 0;
         while (s[i..(i + length)].Distinct().Count() != length)
@@ -11,7 +11,7 @@ public class Day6 : BaseDay
         }
         return i + length;
     }
-    
+
     public override string PartOne(string input)
         => GetIndexOfMarker(input, 4).ToString();
 
