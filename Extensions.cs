@@ -70,7 +70,7 @@ public static class Extensions
             {
                 result[index++] = value++;
                 stack.Push(value);
-                
+
                 if (index != m)
                 {
                     continue;
@@ -150,5 +150,15 @@ public static class Extensions
         {
             yield return word;
         }
+    }
+
+    public static int LowestCommonMultiple(this IEnumerable<int> source)
+    {
+        int lcm = 1;
+        foreach (var x in source)
+        {
+            lcm *= x;
+        }
+        return lcm;
     }
 }
