@@ -12,9 +12,9 @@ public class Day13 : BaseDay
             {
                 return x.GetValue<int>().CompareTo(y.GetValue<int>());
             }
-            JsonArray xArr = x switch { JsonArray arr => arr, _ => new JsonArray(x.GetValue<int>()) };
-            JsonArray yArr = y switch { JsonArray arr => arr, _ => new JsonArray(y.GetValue<int>()) };
-            foreach ((JsonNode xItem, JsonNode yItem) in Enumerable.Zip(xArr, yArr))
+            JsonArray xArr = x switch { JsonArray arr => arr, _ => new JsonArray(x?.GetValue<int>()) };
+            JsonArray yArr = y switch { JsonArray arr => arr, _ => new JsonArray(y?.GetValue<int>()) };
+            foreach ((JsonNode? xItem, JsonNode? yItem) in Enumerable.Zip(xArr, yArr))
             {
                 int c = Compare(xItem, yItem);
                 if (c != 0)
