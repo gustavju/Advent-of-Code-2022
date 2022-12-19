@@ -1,8 +1,10 @@
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace AoC2022;
 
-public static class Extensions
+public static partial class Extensions
 {
     public static List<int> AllIndexesOf(this string str, string value)
     {
@@ -161,4 +163,10 @@ public static class Extensions
         }
         return lcm;
     }
+
+    [GeneratedRegex("-?\\d+")]
+    private static partial Regex IntRegex();
+
+    public static IEnumerable<int> Ints(this string line) =>
+        IntRegex().Matches(line).Select(m => m.Value).Select(int.Parse);
 }
