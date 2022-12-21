@@ -1,6 +1,5 @@
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Linq;
 
 namespace AoC2022;
 
@@ -78,8 +77,7 @@ public static partial class Extensions
                     continue;
                 }
 
-                yield return (int[])result.Clone(); // thanks to @xanatos
-                                                    //yield return result;
+                yield return (int[])result.Clone();
                 break;
             }
         }

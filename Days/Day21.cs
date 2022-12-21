@@ -2,7 +2,7 @@ namespace AoC2022.Days;
 
 public class Day21 : BaseDay
 {
-    private Dictionary<string, string> _monkeys;
+    private Dictionary<string, string> _monkeys = new();
 
     private long ResolveMonkeyValue(string dictKey, long? humnValue = null)
     {
@@ -70,6 +70,5 @@ public class Day21 : BaseDay
             }
         }
         return midPoint.ToString();
-        // 3451534022348 = **
     }
 }
