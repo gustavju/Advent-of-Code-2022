@@ -167,4 +167,6 @@ public static partial class Extensions
 
     public static IEnumerable<int> Ints(this string line) =>
         IntRegex().Matches(line).Select(m => m.Value).Select(int.Parse);
+
+    public static int Mod(this int x, int mod) => ((x % mod) + mod) % mod;
 }
