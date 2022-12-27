@@ -2,11 +2,12 @@ namespace AoC2022.Days;
 
 public class Day23 : BaseDay
 {
-    private readonly List<(int r, int c)> _directions = new() { (-1, 0), (1, 0), (0, -1), (0, 1) }; // N S W E
+    private readonly List<(int r, int c)> _directions = new() { (-1, 0), (1, 0), (0, -1), (0, 1) };
     private int ElfScan(string s, bool partTwo = false)
     {
-        string[] initState = s.Lines().ToArray();
         HashSet<(int r, int c)> elfs = new();
+
+        string[] initState = s.Lines().ToArray();
         for (int r = 0; r < initState.Length; r++)
         {
             for (int c = 0; c < initState[0].Length; c++)
@@ -19,13 +20,13 @@ public class Day23 : BaseDay
         }
 
         int rounds = 0;
-        bool elfMoved = false;
-        while (elfMoved || (partTwo && rounds < 10))
+        bool movement = true;
+        while ((partTwo && movement) || (!partTwo && rounds < 10))
         {
-            Dictionary<(int r, int c), (int r, int c)> elfUpdates = new();
+            Dictionary<(int r, int c), (int r, int c)> elfUpdates = elfs.ToDictionary(e => e, e => e);
+            movement = false;
             foreach ((int r, int c) elf in elfs)
             {
-                elfMoved = false;
                 bool tryingToMove = false;
                 for (int dr = -1; dr <= 1; dr++)
                 {
@@ -36,34 +37,31 @@ public class Day23 : BaseDay
                     }
                 }
 
-                if (tryingToMove)
+                if (!tryingToMove)
                 {
-                    for (int direction = 0; direction < 4; direction++)
-                    {
-                        int dirOffset = rounds % 4;
-                        (int r, int c) = _directions[(dirOffset + direction) % 4];
-                        (int r, int c) newElf = (elf.r + r, elf.c + c);
-                        if (((dirOffset + direction) % 4 < 2 && !elfs.Contains(newElf) && !elfs.Contains((newElf.r, newElf.c + 1)) && !elfs.Contains((newElf.r, newElf.c - 1))) ||
-                            ((dirOffset + direction) % 4 >= 2 && !elfs.Contains(newElf) && !elfs.Contains((newElf.r + 1, newElf.c)) && !elfs.Contains((newElf.r - 1, newElf.c))))
-                        {
-                            elfUpdates.Add(elf, newElf);
-                            elfMoved = true;
-                            break;
-                        }
-                    }
+                    continue;
                 }
 
-                if (!elfMoved)
-                    elfUpdates.Add(elf, elf);
-
+                for (int currDir = 0; currDir < 4; currDir++)
+                {
+                    int direction = (rounds + currDir) % 4;
+                    (int r, int c) = _directions[direction];
+                    (int r, int c) newElf = (elf.r + r, elf.c + c);
+                    if ((direction < 2 && !elfs.Contains(newElf) && !elfs.Contains((newElf.r, newElf.c + 1)) && !elfs.Contains((newElf.r, newElf.c - 1))) ||
+                        (direction >= 2 && !elfs.Contains(newElf) && !elfs.Contains((newElf.r + 1, newElf.c)) && !elfs.Contains((newElf.r - 1, newElf.c))))
+                    {
+                        elfUpdates[elf] = newElf;
+                        movement = true;
+                        break;
+                    }
+                }
             }
             var collisions = elfUpdates.GroupBy(e => e.Value).Where(grp => grp.Count() > 1);
             foreach (var collition in collisions)
             {
                 foreach (var invalidMove in collition)
                 {
-                    elfUpdates.Remove(invalidMove.Key);
-                    elfUpdates.Add(invalidMove.Key, invalidMove.Key);
+                    elfUpdates[invalidMove.Key] = invalidMove.Key;
                 }
             }
             elfs = elfUpdates.Values.ToHashSet();
